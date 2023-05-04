@@ -9,10 +9,9 @@ from torch.utils.data import Dataset
 # I hardcoded the image names and ground truth for faster evaluation
 # performance is exactly the same as if you use VPR-Bench.
 
-# DATASET_ROOT = '/home/USER/work/VPR-Bench/datasets/Nordland/'
+# DATASET_ROOT = '/home/USER/work/datasets/Pittsburgh/'
 # GT_ROOT = '/home/USER/work/gsv-cities/datasets/' # BECAREFUL, this is the ground truth that comes with GSV-Cities
-
-DATASET_ROOT = '/root/autodl-tmp/datasets/Nordland/' 
+DATASET_ROOT = '/root/autodl-tmp/GXU6/' 
 GT_ROOT = '/root/autodl-tmp/gsv-cities/datasets/'                        # (thq 2023/4/7)
 
 path_obj = Path(DATASET_ROOT)
@@ -22,20 +21,19 @@ if not path_obj.exists():
 if not path_obj.joinpath('ref') or not path_obj.joinpath('query'):
     raise Exception(f'Please make sure the directories query and ref are situated in the directory {DATASET_ROOT}')
 
-class NordlandDataset(Dataset):
+class GXUDataset(Dataset):
     def __init__(self, input_transform = None):
         
-
         self.input_transform = input_transform
 
         # reference images names
-        self.dbImages = np.load(GT_ROOT+'Nordland/Nordland_dbImages.npy')
+        self.dbImages = np.load(GT_ROOT+'GXU/GXU_dbImages.npy')
         
         # query images names
-        self.qImages = np.load(GT_ROOT+'Nordland/Nordland_qImages.npy')
+        self.qImages = np.load(GT_ROOT+'GXU/GXU_qImages.npy')
         
         # ground truth
-        self.ground_truth = np.load(GT_ROOT+'Nordland/Nordland_gt.npy', allow_pickle=True)
+        self.ground_truth = np.load(GT_ROOT+'GXU/GXU_gt.npy', allow_pickle=True)
         
         # reference images then query images
         self.images = np.concatenate((self.dbImages, self.qImages))
