@@ -219,14 +219,14 @@ class VPRModel(pl.LightningModule):
             
 if __name__ == '__main__':
     
-    pl.utilities.seed.seed_everything(seed=1, workers=True)
+    # pl.utilities.seed.seed_everything(seed=1, workers=True)
     
     # the datamodule contains train and validation dataloaders,
     # refer to ./dataloader/GSVCitiesDataloader.py for details
     # if you want to train on specific cities, you can comment/uncomment
     # cities from the list TRAIN_CITIES
     datamodule = GSVCitiesDataModule(
-        batch_size=100,
+        batch_size=50,
         img_per_place=4,
         min_img_per_place=4,
         # cities=['London', 'Boston', 'Melbourne'], # you can sppecify cities here or in GSVCitiesDataloader.py
@@ -313,7 +313,7 @@ if __name__ == '__main__':
         callbacks=[checkpoint_cb],# we run the checkpointing callback (you can add more)
         reload_dataloaders_every_n_epochs=1, # we reload the dataset to shuffle the order
         log_every_n_steps=20,
-        fast_dev_run=True # comment if you want to start training the network and saving checkpoints
+        fast_dev_run=False # comment if you want to start training the network and saving checkpoints
     )
 
     # we call the trainer, and give it the model and the datamodule

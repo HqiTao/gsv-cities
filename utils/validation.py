@@ -1,10 +1,48 @@
 import numpy as np
+import time
 import faiss
 import faiss.contrib.torch_utils
 from prettytable import PrettyTable
 
 
-def get_validation_recalls(r_list, q_list, k_values, gt, print_results=True, faiss_gpu=False, dataset_name='dataset without name ?'):
+txt_path = '../LOGS/results.txt'
+
+def write(x):
+    with open(txt_path, "a") as f:
+        f.write(x)
+
+
+def results2txt(q_index, mask, pred, which_ds = 'GXU'):
+
+    GT_ROOT = '/root/autodl-tmp/gsv-cities/datasets/'
+
+    qImages = np.load(GT_ROOT+f'{which_ds}/{which_ds}_qImages.npy')
+    dbImages = np.load(GT_ROOT+f'{which_ds}/{which_ds}_dbImages.npy')
+
+    write("|%-12s| " % qImages[q_index])
+
+    num = 0
+    for m in mask:
+        if m:
+            write("%-15s(√)| " % (dbImages[pred[num].numpy()]))
+            num += 1
+        else:
+            write("%-15s(x)| " % (dbImages[pred[num].numpy()]))
+            num += 1
+
+    write("\n")
+    
+    for i in range(len(mask)+1):
+        if i == 0:
+            write("+------------+")
+        else:
+            write("-------------------+")
+
+    write(" \n")
+
+
+
+def get_validation_recalls(r_list, q_list, k_values, gt, print_results=True, save_topn=False, faiss_gpu=False, dataset_name='dataset without name ?'):
         
         embed_size = r_list.shape[1]
         if faiss_gpu:
@@ -22,8 +60,40 @@ def get_validation_recalls(r_list, q_list, k_values, gt, print_results=True, fai
 
         # search for queries in the index
         _, predictions = faiss_index.search(q_list, max(k_values))
-        
-        
+
+        # save the image paths of top-n
+        if save_topn == True:           
+            n = 5
+            assert n <= k_values[-1], "The value of n must be less than or equal to the maximum value in k_values"
+            current_timestamp = time.strftime("%c")
+            write("Results of top-%d(%s)\n" % (n, current_timestamp))
+            for i in range(n+1):
+                if i == 0:
+                    write("+------------+")
+                else:
+                    write("-------------------+")
+            write(" \n")
+
+            for i in range(n+1):
+                if i == 0:
+                    write("|%-12s|" % 'query')
+                else:
+                    write(" %-s%-d%-14s|" % ('top', i, ' '))
+            write(" \n")
+
+            for i in range(n+1):
+                if i == 0:
+                    write("+------------+")
+                else:
+                    write("-------------------+")
+            write(" \n")
+
+            for q_idx, pred in enumerate(predictions):
+                mask = np.in1d(pred[:n], gt[q_idx])
+                results2txt(q_idx, mask, pred)
+
+            write("\n")
+
         
         # start calculating recall_at_k
         correct_at_k = np.zeros(len(k_values))

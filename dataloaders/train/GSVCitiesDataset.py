@@ -13,7 +13,8 @@ default_transform = T.Compose([
 ])
 
 # NOTE: Hard coded path to dataset folder 
-BASE_PATH = '/home/USER/work/datasets/gsv_cities/'
+# BASE_PATH = '/home/USER/work/datasets/gsv_cities/'
+BASE_PATH = '/root/autodl-tmp/datasets/gsv_cities/' # (thq, 2023/04/06)
 
 if not Path(BASE_PATH).exists():
     raise FileNotFoundError(

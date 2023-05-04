@@ -9,8 +9,11 @@ from torch.utils.data import Dataset
 # I hardcoded the image names and ground truth for faster evaluation
 # performance is exactly the same as if you use VPR-Bench.
 
-DATASET_ROOT = '/home/USER/work/VPR-Bench/datasets/ESSEX3IN1_dataset/'
-GT_ROOT = '/home/USER/work/gsv-cities/datasets/' # BECAREFUL, this is the ground truth that comes with GSV-Cities
+# DATASET_ROOT = '/home/USER/work/VPR-Bench/datasets/ESSEX3IN1_dataset/'
+# GT_ROOT = '/home/USER/work/gsv-cities/datasets/' # BECAREFUL, this is the ground truth that comes with GSV-Cities
+
+DATASET_ROOT = '/root/autodl-tmp/datasets/ESSEX3IN1_dataset/' 
+GT_ROOT = '/root/autodl-tmp/gsv-cities/datasets/'                        # (thq 2023/4/7)
 
 path_obj = Path(DATASET_ROOT)
 if not path_obj.exists():

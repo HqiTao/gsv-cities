@@ -6,8 +6,8 @@ import torch
 import numpy as np
 from PIL import Image
 
-DATASET_ROOT = '/home/USER/work/datasets/msls_val/'
-GT_ROOT = '/home/USER/work/gsv-cities/datasets/' # BECAREFUL, this is the ground truth that comes with GSV-Cities
+DATASET_ROOT = '/root/autodl-tmp/datasets/msls_val/'
+GT_ROOT = '/root/autodl-tmp/gsv-cities/datasets/' # BECAREFUL, this is the ground truth that comes with GSV-Cities
 
 class MSLS(Dataset):
     def __init__(self, input_transform = None):
@@ -21,7 +21,7 @@ class MSLS(Dataset):
         self.ground_truth = np.load(GT_ROOT+'msls_val/msls_val_pIdx.npy', allow_pickle=True)
         
         # reference images then query images
-        self.images = np.concatenate((self.dbImages, self.qImages[self.qIdx]))
+        self.images = np.concatenate((self.dbImages, self.qImages[self.qIdx])) # (?) (thq 2023/4/8)
         self.num_references = len(self.dbImages)
         self.num_queries = len(self.qImages[self.qIdx])
     
